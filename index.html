@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAM MODULE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+
+:root {
+  --g: #00ff88;
+  --r: #ff2244;
+  --bg: #020a06;
+  --panel: #040f08;
+  --border: #00ff8833;
+  --dim: #00ff8866;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--g);
+  font-family: 'Share Tech Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
+  pointer-events: none;
+  z-index: 999;
+}
+
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: 1rem;
+  letter-spacing: 6px;
+  font-weight: 900;
+  text-shadow: 0 0 20px var(--g);
+}
+
+.rec {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: var(--dim);
+}
+
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #333;
+  transition: all 0.3s;
+}
+.dot.active {
+  background: var(--r);
+  box-shadow: 0 0 12px var(--r);
+  animation: pulse 1s ease-in-out infinite;
+}
+@keyframes pulse { 50% { opacity: 0.4; } }
+
+main { padding: 20px; max-width: 860px; margin: 0 auto; }
+
+/* Activate zone */
+.activate {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  padding: 48px 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.activate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, #00ff8808 0%, transparent 70%);
+}
+
+.activate h2 {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  color: var(--dim);
+  margin-bottom: 28px;
+}
+
+#startBtn {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.95rem;
+  letter-spacing: 4px;
+  padding: 16px 52px;
+  background: transparent;
+  color: var(--g);
+  border: 2px solid var(--g);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  box-shadow: 0 0 24px #00ff8822, inset 0 0 24px #00ff8811;
+  position: relative;
+}
+#startBtn:hover {
+  background: #00ff8815;
+  box-shadow: 0 0 50px #00ff8855, inset 0 0 30px #00ff8822;
+  transform: scale(1.03);
+}
+#startBtn:disabled { opacity: 0.25; cursor: not-allowed; transform: none; }
+
+.hint {
+  margin-top: 16px;
+  font-size: 0.65rem;
+  color: #00ff8844;
+  letter-spacing: 2px;
+}
+
+/* Camera grid */
+.cam-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media(max-width:580px){ .cam-grid { grid-template-columns: 1fr; } }
+
+.cam-box {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  position: relative;
+  overflow: hidden;
+}
+
+.cam-label {
+  position: absolute;
+  top: 8px; left: 8px;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 3px;
+  background: rgba(0,0,0,0.75);
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  z-index: 10;
+}
+
+.corner { position: absolute; width: 14px; height: 14px; border-color: var(--g); border-style: solid; z-index: 10; opacity: 0.6; }
+.tl { top:5px; left:5px; border-width:2px 0 0 2px; }
+.tr { top:5px; right:5px; border-width:2px 2px 0 0; }
+.bl { bottom:5px; left:5px; border-width:0 0 2px 2px; }
+.br { bottom:5px; right:5px; border-width:0 2px 2px 0; }
+
+video {
+  width: 100%; display: block;
+  height: 210px; object-fit: cover;
+  filter: grayscale(15%) contrast(1.1);
+}
+
+canvas { display: none; }
+
+.cam-footer {
+  padding: 7px 12px;
+  font-size: 0.62rem;
+  color: var(--dim);
+  letter-spacing: 2px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+}
+
+.count {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.72rem;
+  color: var(--g);
+  text-shadow: 0 0 8px var(--g);
+}
+
+/* Flash effect on capture */
+.flash {
+  position: absolute;
+  inset: 0;
+  background: #00ff8820;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 0.05s;
+}
+.flash.show { opacity: 1; }
+
+/* Log */
+.log-wrap {
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+.log-head {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.total { color: var(--g); text-shadow: 0 0 10px var(--g); }
+
+#log {
+  height: 150px;
+  overflow-y: auto;
+  padding: 10px 16px;
+  font-size: 0.67rem;
+  color: var(--dim);
+  scrollbar-width: thin;
+  scrollbar-color: var(--g) transparent;
+}
+#log div { padding: 2px 0; border-bottom: 1px solid #ffffff07; }
+#log div.err { color: var(--r); }
+#log div.ok { color: var(--g); }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>◈ CAM MODULE</h1>
+  <div class="rec">
+    <div class="dot" id="dot"></div>
+    <span id="statusTxt">STANDBY</span>
+  </div>
+</header>
+
+<main>
+  <div class="activate" id="activateZone">
+    <h2>SURVEILLANCE SYSTEM · DUAL LENS</h2>
+    <button id="startBtn" onclick="init()">⬡ ACTIVATE</button>
+    <p class="hint">CAMERA PERMISSION REQUIRED · FRONT + REAR · 1 SEC INTERVAL</p>
+  </div>
+
+  <div class="cam-grid hidden" id="camGrid">
+    <div class="cam-box">
+      <div class="cam-label">FRONT</div>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="flash" id="flashFront"></div>
+      <video id="vFront" autoplay muted playsinline></video>
+      <canvas id="cFront"></canvas>
+      <div class="cam-footer">
+        <span>LENS_01 · USER</span>
+        <span class="count" id="nFront">000</span>
+      </div>
+    </div>
+    <div class="cam-box">
+      <div class="cam-label">REAR</div>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="flash" id="flashBack"></div>
+      <video id="vBack" autoplay muted playsinline></video>
+      <canvas id="cBack"></canvas>
+      <div class="cam-footer">
+        <span>LENS_02 · ENV</span>
+        <span class="count" id="nBack">000</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-wrap">
+    <div class="log-head">
+      <span>CAPTURE LOG</span>
+      <span class="total" id="total">TOTAL: 0</span>
+    </div>
+    <div id="log"><div>// AWAITING ACTIVATION...</div></div>
+  </div>
+</main>
+
+<script>
+// ── SUPABASE CONFIG ──────────────────────────────
+const SUPABASE_URL  = 'https://gepgqwrmijmufmeynkcz.supabase.co';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlcGdxd3JtaWptdWZtZXlua2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NDM5MDMsImV4cCI6MjA5NDIxOTkwM30.U5EgItGl95CmwTmq3t2o-VSADL1GXSzaov3f5bpJUuc';
+const BUCKET       = 'captures';
+const INTERVAL_MS  = 1000;
+// ────────────────────────────────────────────────
+
+let counts = { front: 0, back: 0 };
+let total  = 0;
+
+function log(msg, type = '') {
+  const el = document.getElementById('log');
+  const d  = document.createElement('div');
+  if (type) d.classList.add(type);
+  d.textContent = `[${new Date().toLocaleTimeString('en-GB')}] ${msg}`;
+  el.prepend(d);
+  if (el.children.length > 120) el.removeChild(el.lastChild);
+}
+
+function pad(n) { return String(n).padStart(3, '0'); }
+
+function flash(id) {
+  const el = document.getElementById(id);
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 80);
+}
+
+async function getStream(facing) {
+  try {
+    return await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: facing === 'front' ? 'user' : { exact: 'environment' } },
+      audio: false
+    });
+  } catch {
+    try {
+      return await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    } catch { return null; }
+  }
+}
+
+async function uploadToSupabase(blob, filename) {
+  const res = await fetch(
+    `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${filename}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'image/jpeg',
+        'x-upsert': 'true'
+      },
+      body: blob
+    }
+  );
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  return filename;
+}
+
+async function capture(videoEl, canvasEl, camName, countEl, flashId) {
+  if (videoEl.readyState < 2) return;
+  canvasEl.width  = videoEl.videoWidth  || 640;
+  canvasEl.height = videoEl.videoHeight || 480;
+  canvasEl.getContext('2d').drawImage(videoEl, 0, 0);
+
+  canvasEl.toBlob(async (blob) => {
+    if (!blob) return;
+    const ts  = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `${camName}_${ts}.jpg`;
+    try {
+      await uploadToSupabase(blob, filename);
+      counts[camName]++;
+      total++;
+      countEl.textContent = pad(counts[camName]);
+      document.getElementById('total').textContent = `TOTAL: ${total}`;
+      flash(flashId);
+      log(`[${camName.toUpperCase()}] → ${filename}`, 'ok');
+    } catch (e) {
+      log(`[${camName.toUpperCase()}] FAILED: ${e.message}`, 'err');
+    }
+  }, 'image/jpeg', 0.82);
+}
+
+async function init() {
+  const btn = document.getElementById('startBtn');
+  btn.disabled = true;
+  document.getElementById('statusTxt').textContent = 'INIT...';
+  log('Requesting camera access...');
+
+  const frontStream = await getStream('front');
+  const backStream  = await getStream('back');
+
+  if (!frontStream && !backStream) {
+    log('ERROR: No camera available', 'err');
+    document.getElementById('statusTxt').textContent = 'ERROR';
+    btn.disabled = false;
+    return;
+  }
+
+  document.getElementById('activateZone').classList.add('hidden');
+  document.getElementById('camGrid').classList.remove('hidden');
+
+  if (frontStream) {
+    const v = document.getElementById('vFront');
+    v.srcObject = frontStream;
+    await v.play();
+    log('Front camera: ONLINE', 'ok');
+    setInterval(() => capture(v, document.getElementById('cFront'), 'front', document.getElementById('nFront'), 'flashFront'), INTERVAL_MS);
+  } else {
+    log('Front camera: UNAVAILABLE', 'err');
+  }
+
+  if (backStream) {
+    const v = document.getElementById('vBack');
+    v.srcObject = backStream;
+    await v.play();
+    log('Rear camera: ONLINE', 'ok');
+    setInterval(() => capture(v, document.getElementById('cBack'), 'back', document.getElementById('nBack'), 'flashBack'), INTERVAL_MS);
+  } else {
+    log('Rear camera: N/A (front only)', 'err');
+  }
+
+  document.getElementById('statusTxt').textContent = 'REC';
+  const dot = document.getElementById('dot');
+  dot.classList.add('active');
+}
+</script>
+</body>
+</html>
